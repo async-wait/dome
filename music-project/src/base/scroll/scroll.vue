@@ -22,6 +22,10 @@ import BScroll from 'better-scroll'
             data: {
                 type: Array,
                 default: null
+            },
+            listenScroll: {
+                type: Boolean,
+                default: false
             }
         },
         mounted(){
@@ -40,6 +44,16 @@ import BScroll from 'better-scroll'
                      probeType: this.probeType,
                      click: this.click
                  });
+
+                if(this.listenScroll){
+                    // 在this.scroll中this不指向vue实例对象
+                    let self = this
+                    this.scroll.on("scroll", (pos) => {
+                        self.$emit("scroll", pos);
+                    });
+                }
+
+
             },
             enable(){
                 this.scroll && this.scroll.enable()
