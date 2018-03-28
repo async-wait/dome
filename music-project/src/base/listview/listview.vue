@@ -10,7 +10,10 @@
             <li class="list-group" v-for="group in data" ref="listGroup">
                 <h2 class="list-group-title">{{group.title}}</h2>
                 <ul>
-                    <li class="list-group-item" v-for="item in group.items">
+                    <li class="list-group-item" 
+                    v-for="item in group.items"
+                    @click="selectItem(item)"
+                >
                         <img class="avatar" v-lazy="item.avatar" alt="">
                         <span class="name">{{item.name}}</span>
                     </li>
@@ -38,11 +41,15 @@
         <div class="list-fixed" v-show="fixedTitle" ref="listFixed">
             <h2 class="fixed-title">{{fixedTitle}}</h2>
         </div>
+        <div class="loading-container" v-show="!data.length">
+            <loading></loading>
+        </div>
     </scroll>
 </template>
 
 <script>
     import Scroll from 'base/scroll/scroll'
+    import Loading from 'base/loading/loading'
     import { getData } from 'common/js/dom'
     
 
@@ -68,6 +75,9 @@
             }
         },
         methods: {
+            selectItem(item){
+                this.$emit("select", item);
+            },
             // 监听触摸开始事件touchstart
             onTouchStart(e){
                 let touchStartIndex = getData(e.target, 'index');
@@ -182,7 +192,8 @@
             }
         },
         components: {
-            Scroll
+            Scroll,
+            Loading
         }
     }
 </script>
