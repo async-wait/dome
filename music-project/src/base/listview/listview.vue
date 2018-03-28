@@ -33,6 +33,11 @@
                 </li>
             </ul>
         </div>
+
+        <!-- 小标题固定到头部 -->
+        <div class="list-fixed" v-show="fixedTitle" ref="listFixed">
+            <h2 class="fixed-title">{{fixedTitle}}</h2>
+        </div>
     </scroll>
 </template>
 
@@ -40,7 +45,6 @@
     import Scroll from 'base/scroll/scroll'
     import { getData } from 'common/js/dom'
     
-
 
     export default {
         // created和data里的数据不同点在于，data里的数据改变以后会改变dom，并且被时时监测
@@ -54,6 +58,7 @@
             return {
                 scrollY: -1,
                 currentIndex: 0,
+                diff: 0
             }
         },
         props: {
@@ -93,6 +98,18 @@
                 this.scrollY = pos.y
             },
             _scrollTo(index){
+                // 这里判断index===null或者!index && index !== 0
+                if (index === null){
+                    return ;
+                }
+                if(index < 0){
+                    this.currentIndex = 0
+                }
+                if(index > this.listHeight -2){
+                    this.currentIndex = this.listHeight - 2
+                }
+                this.scrollY = -this.listHeight[index]
+
                 this.$refs.listview.scrollToElement(this.$refs.listGroup[index],0);
             },
             _calculateHeight(){
@@ -113,6 +130,14 @@
         computed: {
             shortcutList(){
                 return this.data.map((item) => item.title.substr(0,1))
+            },
+            // 小标题固定头部内容
+            fixedTitle(){
+                if(this.scrollY > 0){
+                    return;
+                }
+                // 先判断当前currentIndex中是否有数据
+                return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ""
             }
         },
         watch: {
@@ -139,11 +164,21 @@
                     
                     if(-newY >= height1 && -newY < height2){
                         this.currentIndex = i
+                        this.diff = height2 + newY
                         return ;
                     }
                     // -newY大于listHeight最后一个
                     this.currentIndex = listHeight.length - 2
                 }
+            },
+            // 观测diff的变化
+            diff(newVal){
+
+                let fixedTop = (newVal > 0 && newVal < this.$refs.listFixed.clientHeight) ? newVal - this.$refs.listFixed.clientHeight : 0
+                if(this.fixedTop == fixedTop){
+                    return ;
+                }
+                this.$refs.listFixed.style.transform = `translate3d(0,${fixedTop}px,0)`
             }
         },
         components: {
