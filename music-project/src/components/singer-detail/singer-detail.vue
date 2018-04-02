@@ -1,8 +1,6 @@
 <template>
     <transition name="slider">
-        <div class="singer-detail">
-
-        </div>
+        <music-list></music-list>
     </transition>
 </template>
 
@@ -11,6 +9,7 @@
     import { getSingerDetail } from 'api/getSinger'
     import { ERR_OK } from 'api/config'
     import { createSong } from 'common/js/song'
+    import musicList from 'components/music-list/music-list'
     export default {
         data(){
             return {
@@ -44,7 +43,6 @@
             // 歌手数据初始化
             _normalSongs(list){
                 let ret = [];
-                // 歌手数据初始化
                 list.forEach((item) => {
                     let { musicData } = item
                     if(musicData.songid && musicData.albummid){
@@ -53,6 +51,9 @@
                 });
                 return ret;
             }
+        },
+        components: {
+            musicList
         }
     }
 </script>
@@ -60,15 +61,7 @@
 <style lang="less" scoped>
     @import "../../common/less/variable.less";
     @import "../../common/less/mixin.less";
-    .singer-detail{
-        position: fixed;
-        z-index: 100;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: @color-background;
-    }
+
     .slider-enter-active, .slider-leave-active{
         transition: all .5s
     }

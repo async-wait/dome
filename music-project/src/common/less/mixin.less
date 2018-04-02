@@ -73,6 +73,18 @@
       border-@{side}: @size * 3 solid @color;
     }
   }
+// 四周的是边线
+.border(@size,@color){
+    border: @size solid @color;
+    [data-dpr="2"] & {
+      border: @size * 2 solid @color;
+    }
+    [data-dpr="3"] & {
+      border: @size * 3 solid @color;
+    }
+  }
+
+  
 //文字截断的mixin
 .ellipsis(@width:100%) {
     white-space: nowrap;
