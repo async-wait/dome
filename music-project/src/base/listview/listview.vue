@@ -51,7 +51,6 @@
     import Scroll from 'base/scroll/scroll'
     import Loading from 'base/loading/loading'
     import { getData } from 'common/js/dom'
-    
 
     export default {
         // created和data里的数据不同点在于，data里的数据改变以后会改变dom，并且被时时监测
@@ -135,7 +134,6 @@
                     this.listHeight.push(height)
                 }
             }
-
         },
         computed: {
             shortcutList(){

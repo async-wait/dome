@@ -7,7 +7,41 @@
 </template>
 
 <script>
-    
+    import { mapState } from 'vuex'
+    import { getSingerDetail } from 'api/getSinger'
+    import { ERR_OK } from 'api/config'
+    export default {
+        data(){
+            return {
+                singerDetailList: []
+            }
+        },
+        computed: {
+            ...mapState([
+                'singer'
+            ])
+        },
+        mounted(){
+            // 一般情况下在this.$el虚拟dom替换真是dom以后请求后台收据
+            this._getDetail();
+        },
+        methods: {
+            // 获取详情页面的数据
+            _getDetail(){
+                // 这里需要判断，如果是web端，当用户在详情页面刷新以后，获取不到singer.id，就刷新页面，回退到歌手列表页面
+                // 这里本来用的getters,由于getters在页面刷新以后，再次点击数据不更新，所以改用state
+                if(!this.singer){
+                    this.$router.push('/singer')
+                    return ;
+                }
+                getSingerDetail(this.singer.id).then(res => {
+                    if(res.code === ERR_OK){
+                        this.singerDetailList = res.data.list;
+                    }
+                })
+            }
+        }
+    }
 </script>
 
 <style lang="less" scoped>

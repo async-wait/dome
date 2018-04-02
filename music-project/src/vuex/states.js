@@ -1,8 +1,6 @@
 // 要传递的变量
 const state = {
-    singer: {
-
-    }
+    singer: {}
 }
 
 export default state

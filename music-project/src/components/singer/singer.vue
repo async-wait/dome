@@ -10,6 +10,8 @@
     import { ERR_OK } from "api/config"
     import Singer from 'common/js/singer'
     import Listview from 'base/listview/listview'
+    import { mapMutations } from 'vuex'
+
     // 定义常量  “热门”
     const HOT_NAME = "热门"
     // 只获取热门数据的前10条
@@ -29,6 +31,8 @@
                 this.$router.push({
                     path: `/singer/${item.id}`
                 })
+                // 利用vuex的状态管理，先把传过来的歌手信息存储，然后再从歌手详情页面获取
+                this.setSinger(item);
             },
             _getSingerList(){
                 getSingerList().then(res => {
@@ -83,7 +87,10 @@
                 });
                 // 热门数组和排序的数据整合到一个数组里面
                 return hot.concat(ret);
-            }
+            },
+            ...mapMutations({
+                setSinger: 'SET_SINGER'
+            })
         },
         components: {
             Listview
