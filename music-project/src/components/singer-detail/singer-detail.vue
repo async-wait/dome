@@ -44,6 +44,7 @@
             // 歌手数据初始化
             _normalSongs(list){
                 let ret = [];
+                // 歌手数据初始化
                 list.forEach((item) => {
                     let { musicData } = item
                     if(musicData.songid && musicData.albummid){
