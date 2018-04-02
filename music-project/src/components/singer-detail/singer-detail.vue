@@ -10,10 +10,11 @@
     import { mapState } from 'vuex'
     import { getSingerDetail } from 'api/getSinger'
     import { ERR_OK } from 'api/config'
+    import { createSong } from 'common/js/song'
     export default {
         data(){
             return {
-                singerDetailList: []
+                songs: []
             }
         },
         computed: {
@@ -36,9 +37,20 @@
                 }
                 getSingerDetail(this.singer.id).then(res => {
                     if(res.code === ERR_OK){
-                        this.singerDetailList = res.data.list;
+                        this.songs = this._normalSongs(res.data.list);
                     }
                 })
+            },
+            // 歌手数据初始化
+            _normalSongs(list){
+                let ret = [];
+                list.forEach((item) => {
+                    let { musicData } = item
+                    if(musicData.songid && musicData.albummid){
+                        ret.push(createSong(musicData));
+                    }
+                });
+                return ret;
             }
         }
     }
