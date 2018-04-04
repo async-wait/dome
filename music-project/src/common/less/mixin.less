@@ -12,6 +12,16 @@
     margin: @t/@base @r/@base @b/@base @l/@base; 
 };
 
+
+// background-size大小
+.background-size(@w, @h){
+    background-size: @w/@base @h/@base;
+    -webkit-background-size: @w/@base @h/@base;
+    // 移动端没必要考虑moz和o
+    -moz-background-size: @w/@base @h/@base;
+    -o-background-size: @w/@base @h/@base;
+}
+
 // 圆角
 .border-radius(@px){
    border-radius:  @px / @base;

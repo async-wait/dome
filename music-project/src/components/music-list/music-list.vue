@@ -3,30 +3,54 @@
         <div class="back">
             <i class="icon-back"></i>
         </div>
-        <h1 class="title"></h1>
-        <div class="bg-image">
+        <h1 class="title" v-html="title"></h1>
+        <div class="bg-image" 
+             :style="bgStyle" 
+             ref="backgroundImage" 
+             style="position:relative"
+        >
             <div class="filter"></div>
         </div>
+        <scroll :data="songs" class="list" ref="list">
+            <div class="song-list-wrapper">
+                <song-list :songs="songs"></song-list>
+            </div>
+        </scroll>
     </div>
 </template>
 
 <script>
-export default {
-  props: {
-      bgImage: {
-          type: String,
-          default: ''
-      },
-      title: {
-          type: String,
-          default: ''
-      },
-      songs: {
-          type: Array,
-          default: ''
-      }
-  }
-}
+    import Scroll from 'base/scroll/scroll'
+    import SongList from 'base/song-list/song-list'
+    export default {
+        props: {
+            bgImage: {
+                type: String,
+                default: ''
+            },
+            title: {
+                type: String,
+                default: ''
+            },
+            songs: {
+                type: Array,
+                default: ''
+            }
+        },
+        mounted(){
+            console.log(this.$refs.list);
+            this.$refs.list.$el.style.top = `${this.$refs.backgroundImage.clientHeight}px`
+        },
+        computed: {
+            bgStyle(){
+                return `background-image:url(${this.bgImage})`
+            }
+        },
+        components: {
+            Scroll,
+            SongList
+        }
+    }
 </script>
 
 <style scoped lang="less">
@@ -61,7 +85,7 @@ export default {
             width: 80%;
             .ellipsis(80%);
             text-align: center;
-            line-height: 40px;
+            line-height: 80px;
             font-size: @font-size-large;
             color: @color-text;
         }
