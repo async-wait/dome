@@ -1,5 +1,31 @@
 const singer = state => state.singer
 
+const playing = state => state.playing
+
+const fullScreen = state => state.fullScreen
+
+const playList = state => state.playList
+
+const sequenceList = state => state.sequenceList
+
+const mode = state => state.mode
+
+const currentIndex = state => state.currentIndex
+
+// 计算当前播放的歌曲
+const currentSong = (state) => {
+    return state.playList[state.currentIndex]
+}
+
+
+
 export { 
-    singer
+    singer,
+    playing,
+    fullScreen,
+    playList,
+    sequenceList,
+    mode,
+    currentIndex,
+    currentSong
 }
