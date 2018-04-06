@@ -18,3 +18,34 @@ export function getData(el, name, val) {
     name = prefix + name
     return val ? el.setAttribute(name, val) : el.getAttribute(name)
 }
+
+
+// 检测当前浏览器
+let elementStyle = document.createElement('div').style
+let vendor = (() => {
+    let transformNames = {
+        webkit: 'webkitTransform',
+        Moz: 'MozTransform',
+        O: 'OTransform',
+        ms: 'msTransform',
+        standard: 'transform'
+    }
+
+    for(let key in transformNames){
+        if(elementStyle[transformNames[key]] !== undefined){
+            return key;
+        }
+    }
+    return false;
+})()
+
+export function prefixStyle(style){
+    if(vendor === false){
+        return ;
+    }
+    if(vendor === 'standard'){
+        return style;
+    }
+
+    return vendor + style.charAt(0).toUpperCase() + style.substr(1);
+}
