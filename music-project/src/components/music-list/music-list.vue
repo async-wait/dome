@@ -26,7 +26,7 @@
                 @scroll="scroll"
         >
             <div class="song-list-wrapper">
-                <song-list :songs="songs"></song-list>
+                <song-list :songs="songs" @select="selectItem"></song-list>
             </div>
 
             <!-- 
@@ -44,6 +44,8 @@
     import SongList from 'base/song-list/song-list'
     import { prefixStyle }  from 'common/js/dom'
     import Loading from 'base/loading/loading'
+    import { mapActions, mapState } from 'vuex'
+
     const transform = prefixStyle('transform')
     const backdropFilter = prefixStyle('backdrop-filter')
 
@@ -89,12 +91,25 @@
             // 返回按钮
             back(){
                 this.$router.back();
-            }
+            },
+            selectItem(item, index){
+                this.selectPlay({
+                    list: this.songs,
+                    index
+                });
+            },
+            ...mapActions([
+                'selectPlay'
+            ])
         },
         computed: {
             bgStyle(){
                 return `background-image:url(${this.bgImage})`
-            }
+            },
+            ...mapState([
+                'fullScreen',
+                'playlist'
+            ])
         },
         watch: {
             scrollY(newY){

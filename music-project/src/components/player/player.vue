@@ -1,17 +1,23 @@
 <template>
-    <div class="player">
-        <div class="normal-player">
+    <div class="player" v-show="fullScreen">
+        <div class="normal-player" v-show="fullScreen">
             播放器
         </div>
-        <div class="miniplayer">
+        <div class="miniplayer" v-show="!fullScreen">
 
         </div>
     </div>
 </template>
 
 <script>
+import { mapGetters } from  'vuex'
 export default {
-  
+    computed: {
+        ...mapGetters([
+            'fullScreen',
+            'playlist'
+        ])
+    }
 }
 </script>
 
@@ -20,7 +26,7 @@ export default {
     @import "../../common/less/mixin.less";
 
     .player{
-        .normal-palyer{
+        .normal-player{
             position: fixed;
             left: 0;
             right: 0;

@@ -5,7 +5,7 @@ import 'babel-polyfill' // 编译es6 api
 import App from './App'
 import router from './router'
 import VueLazyload from 'vue-lazyload'
-import store from './vuex/store'
+import store from './store'
 // 移动端适配问题，采用手淘的lib-flexible插件搭配rem来适配
 // 把lib-flexible导入
 import "lib-flexible"

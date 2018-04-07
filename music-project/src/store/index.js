@@ -14,7 +14,7 @@ Vue.use(Vuex)
 // 该模式存在损耗，只在开发环境中使用
 const debug = process.env.NODE_ENV !== "production"
 
-const store = new Vuex.Store({
+export default new Vuex.Store({
     states,
     mutations,
     getters,
@@ -22,5 +22,3 @@ const store = new Vuex.Store({
     strict: debug,
     plugins: debug ? [createLogger()] : [] 
 });
-
-export default store
