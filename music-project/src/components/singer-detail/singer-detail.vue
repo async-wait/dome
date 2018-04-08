@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
+    import { mapGetters } from 'vuex'
     import { getSingerDetail } from 'api/getSinger'
     import { ERR_OK } from 'api/config'
     import { createSong } from 'common/js/song'
@@ -26,7 +26,7 @@
             bgImage(){    
                 return this.singer.avatar
             },
-            ...mapState([
+            ...mapGetters([
                 'singer'
             ])
         },
