@@ -8,6 +8,7 @@ const mutations = {
     [types.SET_PLAY_STATE](state, flag) {
         state.playing = flag
     },
+    // 设置是否全屏
     [types.SET_FULL_SCREEN](state, flag) {
         state.fullScreen = flag
     },

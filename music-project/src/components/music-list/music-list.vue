@@ -44,7 +44,7 @@
     import SongList from 'base/song-list/song-list'
     import { prefixStyle }  from 'common/js/dom'
     import Loading from 'base/loading/loading'
-    import { mapActions, mapState } from 'vuex'
+    import { mapActions, mapGetters } from 'vuex'
 
     const transform = prefixStyle('transform')
     const backdropFilter = prefixStyle('backdrop-filter')
@@ -97,6 +97,7 @@
                     list: this.songs,
                     index
                 });
+                console.log(this.currentSong);
             },
             ...mapActions([
                 'selectPlay'
@@ -106,9 +107,10 @@
             bgStyle(){
                 return `background-image:url(${this.bgImage})`
             },
-            ...mapState([
+            ...mapGetters([
                 'fullScreen',
-                'playlist'
+                'playlist',
+                'currentSong'
             ])
         },
         watch: {

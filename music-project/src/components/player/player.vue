@@ -1,22 +1,91 @@
 <template>
     <div class="player" v-show="playlist.length > 0">
-        <div class="normal-player" v-show="fullScreen">
-            播放器
-        </div>
-        <div class="miniplayer" v-show="!fullScreen">
-
-        </div>
+        <transition name="normal">
+            <div class="normal-player" v-show="fullScreen">
+                <div class="background">
+                    <img width='100%' height='100%' :src="currentSong.image">
+                </div>
+                <div class="top">
+                    <!-- 返回按钮 -->
+                    <div class="back" @click="fullOrMini">
+                        <i class="icon-back"></i>
+                    </div>
+                    <h1 class="title" v-html="currentSong.name"></h1>
+                    <h2 class="subtitle" v-html="currentSong.singer"></h2>
+                </div>
+                <!-- 旋转的cd -->
+                <div class="middle">
+                    <div class="middle-l">
+                        <div class="cd-wrapper">
+                            <div class="cd">
+                                <img class="image" :src="currentSong.image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom">
+                    <div class="operators">
+                        <div class="icon i-left">
+                            <i class="icon-sequence"></i>
+                        </div>
+                        <div class="icon i-left">
+                            <i class="icon-prev"></i>
+                        </div>
+                        <div class="icon i-center">
+                            <i class="icon-play"></i>
+                        </div>
+                        <div class="icon i-right">
+                            <i class="icon-next"></i>
+                        </div>
+                        <div class="icon i-right">
+                            <i class="icon icon-not-favorite"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 
+            迷你控制
+         -->
+         <transition name="mini">
+            <div class="mini-player" v-show="!fullScreen" @click="fullOrMini">
+                <div class="icon">
+                    <img :src="currentSong.image">
+                </div>
+                <div class="text">
+                    <h2 class="name" v-html="currentSong.name"></h2>
+                    <p class="desc" v-html="currentSong.singer"></p>
+                </div>
+                <div class="control">
+                    <i class="icon-play-mini"></i>
+                </div>
+                <!-- 打开歌曲列表的按钮 -->
+                <div class="control">
+                    <i class="icon-playlist"></i>
+                </div>
+            </div>
+         </transition>
     </div>
 </template>
 
 <script>
-import { mapGetters } from  'vuex'
+import { mapGetters, mapMutations } from  'vuex'
 export default {
     computed: {
         ...mapGetters([
             'fullScreen',
-            'playlist'
+            'playlist',
+            'currentSong'
         ])
+    },
+    methods: {
+        // 点击全屏或者变成迷你控制
+        fullOrMini(){
+            this.setFullScreen(!this.fullScreen);
+        },
+        ...mapMutations({
+            setFullScreen: 'SET_FULL_SCREEN'
+        })
     }
 }
 </script>
@@ -68,6 +137,7 @@ export default {
                     .ellipsis();
                     .font-size(@font-size-large);
                     color: @color-text;
+                    text-align: center;
                 }
                 .subtitle{
                     .px2rem(line-height, 40);
@@ -233,7 +303,7 @@ export default {
             }
             &.normal-enter-active, &.normal-leave-active{
                 transition: all 0.4s;
-                .top, .bottom{
+                .top, .bottom {
                     transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32);
                 }
             }
@@ -270,6 +340,8 @@ export default {
                 .padding(0, 10, 0, 20);
                 img{
                     border-radius: 50%;
+                    .px2rem(width, 80);
+                    .px2rem(height, 80);
                     &.play{
                         animation: rotate 10s linear infinite;
                     }
@@ -301,7 +373,7 @@ export default {
                 .px2rem(flex-shrink, 0);
                 .px2rem(flex-basis, 60);
                 .px2rem(width, 60);
-                .padding(0, 10, 0, 10);
+                .padding(0, 30, 0, 30);
                 .icon-play-mini, .icon-pause-mini, .icon-playlist{
                     color: @color-theme-d;
                     .font-size(60);
