@@ -97,7 +97,6 @@
                     list: this.songs,
                     index
                 });
-                console.log(this.currentSong);
             },
             ...mapActions([
                 'selectPlay'

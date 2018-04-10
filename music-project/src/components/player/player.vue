@@ -1,22 +1,26 @@
 <template>
     <div class="player" v-show="playlist.length > 0">
-        <transition name="normal">
+        <transition name="normal"
+                    @enter = "enter"
+                    @after-enter = "afterEnter"
+
+        >
             <div class="normal-player" v-show="fullScreen">
                 <div class="background">
-                    <img width='100%' height='100%' :src="currentSong.image">
+                    <img width='100%' height='100%' :src="currentSong.image" ref="normalCD">
                 </div>
                 <div class="top">
                     <!-- 返回按钮 -->
-                    <div class="back" @click="fullOrMini">
+                    <div class="back" @click="back">
                         <i class="icon-back"></i>
                     </div>
                     <h1 class="title" v-html="currentSong.name"></h1>
                     <h2 class="subtitle" v-html="currentSong.singer"></h2>
                 </div>
                 <!-- 旋转的cd -->
-                <div class="middle">
+                <div class="middle" ref="middle">
                     <div class="middle-l">
-                        <div class="cd-wrapper">
+                        <div class="cd-wrapper" ref="cdWrapper">
                             <div class="cd">
                                 <img class="image" :src="currentSong.image">
                             </div>
@@ -48,9 +52,13 @@
             迷你控制
          -->
          <transition name="mini">
-            <div class="mini-player" v-show="!fullScreen" @click="fullOrMini">
+            <div class="mini-player" 
+                 v-show="!fullScreen" 
+                 @click="open"
+                 ref="miniPlayer"
+            >
                 <div class="icon">
-                    <img :src="currentSong.image">
+                    <img :src="currentSong.image" ref="miniCD">
                 </div>
                 <div class="text">
                     <h2 class="name" v-html="currentSong.name"></h2>
@@ -70,6 +78,11 @@
 
 <script>
 import { mapGetters, mapMutations } from  'vuex'
+import animations from 'create-keyframe-animation'
+import { prefixStyle } from 'common/js/dom'
+
+const transform = prefixStyle('transfrom');
+
 export default {
     computed: {
         ...mapGetters([
@@ -80,8 +93,76 @@ export default {
     },
     methods: {
         // 点击全屏或者变成迷你控制
-        fullOrMini(){
-            this.setFullScreen(!this.fullScreen);
+        open(){
+            this.setFullScreen(true);      
+        },
+        back(){
+            this.setFullScreen(false);
+            console.log(this.fullScreen);
+        },
+        enter(el, done) {
+            const {x, y, scale} = this._getPosAndScale();
+            
+            let animation = {
+                0: {
+                    transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+                },
+                60: {
+                    transform: `translate3d(0, 0px, 0) scale(1.1)`
+                },
+                100: {
+                    transform: `translate3d(0, 0px, 0) scale(1)`
+                }
+            }
+            animations.registerAnimation({
+               name: 'move',
+               animation,
+               presets: {
+                   duration: 400,
+                   easing: 'linear'
+               } 
+            });
+
+            animations.runAnimation(this.$refs.cdWrapper, 'move', done)
+        },
+        afterEnter(el) {
+            animations.unregisterAnimation('move')
+            this.$refs.cdWrapper.style.animation = ''
+        },
+        leave(el, done) {
+            this.$refs.cdWrapper.style.transition = 'all 0.4s'
+            const {x, y, scale} = this._getPosAndScale()
+            this.$refs.cdWrapper.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+            // 监听transitionend,完成以后调用afterLeave方法
+            this.$refs.cdWrapper.addEventListener('transitionend', done);
+            
+        },
+        afterLeave(el){
+            this.$refs.cdWrapper.style.transition = ''
+            this.$refs.cdWrapper.style[transform] = ''
+        },
+        _getPosAndScale() {
+            // 先获取迷你cd的width
+            const miniCDWidth = this.$refs.miniCD.clientWidth;
+            const paddingLeft = this.$refs.miniCD.offsetLeft;
+            const paddingBottom = this.$refs.miniPlayer.clientHeight / 2;
+            // 获取normal情况下的cd的宽度
+            const width = window.innerWidth * 0.8;
+            // normal情况下cd的y轴偏移量
+            const paddingTop = this.$refs.middle.offsetTop;
+
+            // scale的放大缩小比例
+            const scale = miniCDWidth / width;
+
+            // 获取cd从mini状态变为normal状态的偏移量
+            const x = -(window.innerWidth/2 - paddingLeft - miniCDWidth / 2);
+            const y = window.innerHeight - paddingTop - paddingBottom - width/2 - miniCDWidth / 2;
+
+            return {
+                x,
+                y,
+                scale
+            }
         },
         ...mapMutations({
             setFullScreen: 'SET_FULL_SCREEN'
@@ -130,11 +211,11 @@ export default {
                     }
                 }
                 .title{
+                    .ellipsis();
                     width: 70%;
                     margin: 0 auto;
                     .px2rem(line-height, 80);
                     text-align: center;
-                    .ellipsis();
                     .font-size(@font-size-large);
                     color: @color-text;
                     text-align: center;
