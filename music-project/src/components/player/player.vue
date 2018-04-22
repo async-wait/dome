@@ -3,7 +3,8 @@
         <transition name="normal"
                     @enter = "enter"
                     @after-enter = "afterEnter"
-
+                    @leave = 'leave'
+                    @after-leave= 'afterLeave'
         >
             <div class="normal-player" v-show="fullScreen">
                 <div class="background">
@@ -21,7 +22,7 @@
                 <div class="middle" ref="middle">
                     <div class="middle-l">
                         <div class="cd-wrapper" ref="cdWrapper">
-                            <div class="cd">
+                            <div class="cd" :class="cdRotate">
                                 <img class="image" :src="currentSong.image">
                             </div>
                         </div>
@@ -36,7 +37,9 @@
                             <i class="icon-prev"></i>
                         </div>
                         <div class="icon i-center">
-                            <i class="icon-play"></i>
+                            <i :class="playIcon"
+                               @click="getPlayState"
+                            ></i>
                         </div>
                         <div class="icon i-right">
                             <i class="icon-next"></i>
@@ -58,14 +61,16 @@
                  ref="miniPlayer"
             >
                 <div class="icon">
-                    <img :src="currentSong.image" ref="miniCD">
+                    <img :src="currentSong.image" ref="miniCD" :class='cdRotate'>
                 </div>
                 <div class="text">
                     <h2 class="name" v-html="currentSong.name"></h2>
                     <p class="desc" v-html="currentSong.singer"></p>
                 </div>
                 <div class="control">
-                    <i class="icon-play-mini"></i>
+                    <i :class="miniPlayIcon"
+                       @click.stop='getPlayState' 
+                    ></i>
                 </div>
                 <!-- 打开歌曲列表的按钮 -->
                 <div class="control">
@@ -73,6 +78,7 @@
                 </div>
             </div>
          </transition>
+         <audio :src="currentSong.url" ref="audio"></audio>
     </div>
 </template>
 
@@ -85,20 +91,30 @@ const transform = prefixStyle('transfrom');
 
 export default {
     computed: {
-        ...mapGetters([
-            'fullScreen',
-            'playlist',
-            'currentSong'
-        ])
+      // 根据playing状态来判断当前是播放还是暂停
+      playIcon() {
+        return this.playing ? 'icon-pause' : 'icon-play'
+      },
+      miniPlayIcon() {
+        return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+      },
+      cdRotate() {
+        return this.playing ? 'play' : 'pause'
+      },
+      ...mapGetters([
+          'fullScreen',
+          'playlist',
+          'currentSong',
+          'playing'
+      ])
     },
     methods: {
         // 点击全屏或者变成迷你控制
         open(){
-            this.setFullScreen(true);      
+            this.setFullScreen(true);   
         },
         back(){
             this.setFullScreen(false);
-            console.log(this.fullScreen);
         },
         enter(el, done) {
             const {x, y, scale} = this._getPosAndScale();
@@ -130,11 +146,13 @@ export default {
             this.$refs.cdWrapper.style.animation = ''
         },
         leave(el, done) {
-            this.$refs.cdWrapper.style.transition = 'all 0.4s'
             const {x, y, scale} = this._getPosAndScale()
-            this.$refs.cdWrapper.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+            this.$refs.cdWrapper.style.transition = 'all .4s'
+            this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
             // 监听transitionend,完成以后调用afterLeave方法
-            this.$refs.cdWrapper.addEventListener('transitionend', done);
+            
+            // 如果这里用this.$refs.cdWrapper监听的话，监听不到，具体问题目前上不知道
+            el.addEventListener('transitionend', done);
             
         },
         afterLeave(el){
@@ -164,9 +182,27 @@ export default {
                 scale
             }
         },
+        getPlayState() {
+          this.setPlayState(!this.playing)
+        },
         ...mapMutations({
-            setFullScreen: 'SET_FULL_SCREEN'
+            setFullScreen: 'SET_FULL_SCREEN',
+            setPlayState: 'SET_PLAY_STATE'
         })
+    },
+    watch: {
+      // 监听当前song，然后再调用play()
+      currentSong() {
+        this.$nextTick(() => {
+          this.$refs.audio.play()
+        })
+      },
+      playing(newState) {
+        const audio = this.$refs.audio
+        this.$nextTick(() => {
+          newState ? audio.play() : audio.pause()
+        })
+      }
     }
 }
 </script>
