@@ -99,7 +99,7 @@ export default {
         return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
       },
       cdRotate() {
-        return this.playing ? 'play' : 'pause'
+        return this.playing ? 'play' : 'play pause'
       },
       ...mapGetters([
           'fullScreen',
