@@ -33,16 +33,16 @@
                         <div class="icon i-left">
                             <i class="icon-sequence"></i>
                         </div>
-                        <div class="icon i-left">
-                            <i class="icon-prev"></i>
+                        <div class="icon i-left" :class="disabledClass">
+                            <i class="icon-prev" @click="prev"></i>
                         </div>
-                        <div class="icon i-center">
+                        <div class="icon i-center" :class="disabledClass">
                             <i :class="playIcon"
                                @click="getPlayState"
                             ></i>
                         </div>
-                        <div class="icon i-right">
-                            <i class="icon-next"></i>
+                        <div class="icon i-right" :class="disabledClass">
+                            <i class="icon-next" @click="next"></i>
                         </div>
                         <div class="icon i-right">
                             <i class="icon icon-not-favorite"></i>
@@ -78,7 +78,11 @@
                 </div>
             </div>
          </transition>
-         <audio :src="currentSong.url" ref="audio"></audio>
+         <audio :src="currentSong.url" 
+                ref="audio"
+                @canplay="ready"
+                @error="error"
+          ></audio>
     </div>
 </template>
 
@@ -90,6 +94,11 @@ import { prefixStyle } from 'common/js/dom'
 const transform = prefixStyle('transfrom');
 
 export default {
+    data(){
+        return {
+            songReady: false  // 用来判断当前音频资源是否准备完毕
+        }
+    },
     computed: {
       // 根据playing状态来判断当前是播放还是暂停
       playIcon() {
@@ -101,11 +110,16 @@ export default {
       cdRotate() {
         return this.playing ? 'play' : 'play pause'
       },
+      // 当前歌曲没有加载完成时，显示disable样式
+      disabledClass() {
+          return this.songReady ? '' : 'disable'
+      },
       ...mapGetters([
           'fullScreen',
           'playlist',
           'currentSong',
-          'playing'
+          'playing',
+          'currentIndex'
       ])
     },
     methods: {
@@ -182,12 +196,52 @@ export default {
                 scale
             }
         },
+        // 上一首
+        prev() {
+            if(!this.songReady){  // 当前歌曲如果没有准备完毕，不执行后面函数
+                return 
+            }
+            let index = this.currentIndex + 1
+            if(index === this.playlist.length) {
+                index = 0
+            }
+            this.setCurrentIndex(index);
+            if(!this.playing) {
+                this.getPlayState()
+            }
+            this.songReady = false
+        },
+        // 下一首
+        next() {
+            if(!this.songReady){  // 当前歌曲如果没有准备完毕，不执行后面函数
+                return 
+            }
+            let index = this.currentIndex - 1
+            if(index === -1) {
+                index = this.playlist.length - 1
+            }
+            this.setCurrentIndex(index);
+            if(!this.playing) {
+                this.getPlayState()
+            }
+            this.songReady = false
+        },
         getPlayState() {
-          this.setPlayState(!this.playing)
+            if(!this.songReady){  // 当前歌曲如果没有准备完毕，不执行后面函数
+                return 
+            }
+            this.setPlayState(!this.playing)
+        },
+        ready() {
+            this.songReady = true // 当前歌曲加载完成或者加载出错，songReady=true
+        },
+        error() {
+            this.songReady = true
         },
         ...mapMutations({
             setFullScreen: 'SET_FULL_SCREEN',
-            setPlayState: 'SET_PLAY_STATE'
+            setPlayState: 'SET_PLAY_STATE',
+            setCurrentIndex: 'SET_CURRENT_INDEX'
         })
     },
     watch: {

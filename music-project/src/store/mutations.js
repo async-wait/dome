@@ -21,6 +21,7 @@ const mutations = {
     [types.SET_MODE](state, mode) {
         state.mode = mode
     },
+    // 设置当前歌曲
     [types.SET_CURRENT_INDEX](state, index) {
         state.currentIndex = index
     }
