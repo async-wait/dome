@@ -29,6 +29,13 @@
                     </div>
                 </div>
                 <div class="bottom">
+                    <div class="progress-wrapper">
+                        <span class="time time-l">{{format(currentTime)}}</span>
+                        <div class="progress-bar-wrapper">
+                            <progress-bar></progress-bar>
+                        </div>
+                        <span class="time time-r">{{format(currentSong.duration)}}</span>
+                    </div>
                     <div class="operators">
                         <div class="icon i-left">
                             <i class="icon-sequence"></i>
@@ -82,6 +89,7 @@
                 ref="audio"
                 @canplay="ready"
                 @error="error"
+                @timeupdate="updatatime"
           ></audio>
     </div>
 </template>
@@ -90,13 +98,16 @@
 import { mapGetters, mapMutations } from  'vuex'
 import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
+import ProgressBar from 'base/progress-bar/progress-bar'
+
 
 const transform = prefixStyle('transfrom');
 
 export default {
     data(){
         return {
-            songReady: false  // 用来判断当前音频资源是否准备完毕
+            songReady: false,  // 用来判断当前音频资源是否准备完毕
+            currentTime: 0
         }
     },
     computed: {
@@ -238,11 +249,31 @@ export default {
         error() {
             this.songReady = true
         },
+        updatatime(e){
+            this.currentTime = e.target.currentTime
+        },
+        format(interval){
+            interval = interval | 0
+            const minute = interval / 60 | 0
+            const second = this._pad(interval % 60)
+            return `${minute}:${second}`
+        },
+        _pad(num, n = 2){
+            let len = num.toString().length
+            while(len < 2){
+                num = '0' + num
+                len++
+            }
+            return num
+        },
         ...mapMutations({
             setFullScreen: 'SET_FULL_SCREEN',
             setPlayState: 'SET_PLAY_STATE',
             setCurrentIndex: 'SET_CURRENT_INDEX'
         })
+    },
+    components: {
+        ProgressBar
     },
     watch: {
       // 监听当前song，然后再调用play()
