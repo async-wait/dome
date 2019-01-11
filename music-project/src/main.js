@@ -8,14 +8,14 @@ import VueLazyload from 'vue-lazyload'
 import store from './store'
 // 移动端适配问题，采用手淘的lib-flexible插件搭配rem来适配
 // 把lib-flexible导入
-import "lib-flexible"
+// import "lib-flexible"
 // 在入口文件的地方引入less需要注意，用绝对路径
 import "./common/less/index.less"
 
 
 // 采用fastclick插件来解决移动端点击的300ms延迟
-import Fastclick from "fastclick"
-Fastclick.attach(document.body);
+// import Fastclick from "fastclick"
+// Fastclick.attach(document.body);
 
 // 图片懒加载插件引入
 Vue.use(VueLazyload, {
@@ -33,6 +33,7 @@ new Vue({
     el: '#app',
     router,
     store,                        // 将store注册到根组件里面
-    components: { App },
-    template: '<App/>'
+    // components: { App },
+    // template: '<App/>'
+    render: h => h(App)
 })
