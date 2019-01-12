@@ -9,7 +9,6 @@ const Mv = resolve => require(['@/pages/musicHall/Mv/index'], resolve);
 const AlbumNum = resolve => require(['@/pages/musicHall/albumNum/index'], resolve);
 
 export default {
-    name: 'music-hall',
     path: '/music-hall',
     component: MusicHall,
     children: [

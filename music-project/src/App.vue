@@ -16,5 +16,8 @@ export default {
 </script>
 
 <style>
-
+.main {
+  width: 1200px;
+  margin: 0 auto;
+}
 </style>

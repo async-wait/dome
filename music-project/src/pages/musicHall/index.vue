@@ -9,6 +9,14 @@
 import Tab from './tab/tab';
 export default {
     name: 'music-hall',
+    data() {
+        return {}
+    },
+    created() {},
+    mounted () {},
+    methods: {
+
+    },
     components: {
         Tab
     }

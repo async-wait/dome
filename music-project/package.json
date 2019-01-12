@@ -17,6 +17,7 @@
     "babel-polyfill": "^6.26.0",
     "better-scroll": "^1.8.4",
     "create-keyframe-animation": "^0.1.0",
+    "swiper": "^4.4.6",
     "vue": "^2.5.2",
     "vue-lazyload": "^1.2.2",
     "vue-router": "^3.0.1",
