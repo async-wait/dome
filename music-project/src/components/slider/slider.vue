@@ -1,11 +1,7 @@
 <template>
     <div class="swiper-container" ref="swiperContainer">
         <div class="swiper-wrapper">
-            <slot :cont="data">
-                <div class="swiper-slide">slider1</div>
-                <div class="swiper-slide">slider2</div>
-                <div class="swiper-slide">slider3</div>
-            </slot>
+            <slot :cont="data" name="music-hall"></slot>
         </div>
     </div>
 </template>
@@ -27,11 +23,16 @@ export default {
     },
     methods: {
         _initSwiper() {
-            this.swiper = new Swiper(this.$refs.swiperContainer);
+            this.swiper = new Swiper(this.$refs.swiperContainer, {
+                slidesPerView: 'auto',
+                observer: true
+            });
         }
     },
-    components: {
-        
+    watch: {
+        data() {
+            this.swiper.update();
+        }
     }
 }
 </script>

@@ -7,7 +7,7 @@
             </div>
             <div class="content" :class="className">
                 <slider :data="data">
-                    <template slot-scope="{cont}">
+                    <template slot-scope="{cont}" slot="music-hall">
                         <div class="swiper-slide"
                             v-for="(item, index) in cont" :key="index">
                             <div v-for="cont in item" :key="cont.id">

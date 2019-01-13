@@ -8,6 +8,7 @@
             :data="item.data"
             :className="item.class"
         ></personalized>
+        <!-- <div v-for="(item, index) in cont" :key="index">{{item.data}}</div> -->
     </div>
 </template>
 
@@ -63,13 +64,18 @@ export default {
             getPersonalized({type: 96})
                 .then((res) => {
                     let result = res.data.result;
-                    for (let i = 0; i < 5; i++) {
-                        this.content[0].data[i] = result.splice(0, 5);
-                    }
+                    this.content[0].data = this.getDataArr(result, 5);
                 })
                 .catch(err => {
                     console.log(err);
                 });
+        },
+        getDataArr(data, num) {
+            let arr = [];
+            for (let i = 0; i < num; i++) {
+                arr[i] = data.splice(0, 5);
+            }
+            return arr;
         }
     }
 }
