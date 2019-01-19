@@ -13,9 +13,12 @@
                             <div v-for="cont in item" :key="cont.id">
                                 <div class="img">
                                     <img :src="cont.picUrl">
+                                    <div class="play-wp">
+                                        <div class="iconfont icon-material"></div>
+                                    </div>
                                 </div>
                                 <div class="name">{{cont.name}}</div>
-                                <div class="plary-num">播放量：{{playCount(cont.playCount)}}万</div>
+                                <div class="play-num">播放量：{{playCount(cont.playCount)}}万</div>
                             </div>
                         </div>
                     </template>
@@ -123,14 +126,52 @@ export default {
                 }
                 .img {
                     height: 224px;
+                    cursor: pointer;
+                    overflow: hidden;
+                    position: relative;
                     img {
                         height: 224px;
+                        transition: all 0.75s;
+                    }
+                    &:hover {
+                       img, .play-wp {
+                            transform: scale(1.07);
+                       }
+                       .play-wp {
+                          opacity: 1;
+                       }
+                    }
+                    .play-wp {
+                        position: absolute;
+                        left: 0px;
+                        right: 0px;
+                        top: 0px;
+                        bottom: 0px;
+                        background-color: rgba(0, 0, 0, 0.2);
+                        transition: all 0.75s ease;
+                        opacity: 0;
+                        .icon-material {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            color: #fff;
+                            transform: translate3d(-50%, -50%, 0);
+                            font-size: 60px;
+                        }
                     }
                 }
                 .name {
                     .ellipsis();
                     margin-top: 8px;
-                    margin-bottom: 4px;
+                    line-height: 22px;
+                    cursor: pointer;
+                    &:hover {
+                        color: #3ac17e;
+                    }
+                }
+                .play-num {
+                    color: #999;
+                    line-height: 22px;
                 }
             }
         }
