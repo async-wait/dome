@@ -3,6 +3,7 @@
         <div class="swiper-wrapper">
             <slot :cont="data" name="music-hall"></slot>
         </div>
+        <div class="swiper-pagination"></div>
     </div>
 </template>
 
@@ -14,6 +15,15 @@ export default {
     props: {
         data: {
             default: null
+        },
+        isPagination: {
+            type: Object,
+            default: function () {
+                return {
+                    el: '.swiper-pagination',
+                    bulletElement : 'li',
+                }
+            }
         }
     },
     mounted () {
@@ -25,13 +35,16 @@ export default {
         _initSwiper() {
             this.swiper = new Swiper(this.$refs.swiperContainer, {
                 slidesPerView: 'auto',
-                observer: true
+                observer: true,
+                pagination: this.isPagination
             });
         }
     },
     watch: {
         data() {
-            this.swiper.update();
+            this.$nextTick(() => {
+                this.swiper.update();
+            });
         }
     }
 }
@@ -39,5 +52,7 @@ export default {
 
 
 <style lang="less" scoped>
-
+.swiper-container {
+    height: 345px;
+}
 </style>

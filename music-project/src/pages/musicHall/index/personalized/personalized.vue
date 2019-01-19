@@ -15,7 +15,7 @@
                                     <img :src="cont.picUrl">
                                 </div>
                                 <div class="name">{{cont.name}}</div>
-                                <div class="plary-num">播放量：{{cont.playCount}}</div>
+                                <div class="plary-num">播放量：{{playCount(cont.playCount)}}万</div>
                             </div>
                         </div>
                     </template>
@@ -52,6 +52,12 @@ export default {
             default: ''
         }
     },
+    methods: {
+        playCount(num) {
+            num = num / 10000;
+            return num.toFixed(2);
+        }
+    },
     computed: {
         bgClass() {  // 修改背景颜色
             return this.bgcolor === 'gray' ? 'gray' : 'default';
@@ -74,7 +80,7 @@ export default {
         background: #fff;
     }
     .main {
-        height: 532px;
+        height: 450px;
         .title {
             color: #383838;
             font-size: 30px;
