@@ -52,7 +52,5 @@ export default {
 
 
 <style lang="less" scoped>
-.swiper-container {
-    height: 345px;
-}
+
 </style>

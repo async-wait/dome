@@ -13,7 +13,7 @@
 
 <script>
 import Personalized from './personalized/personalized';
-import {getPersonalized, getNewMusic} from '@/api/musicHall/index';
+import {getPersonalized, getNewMusic, getPrivatecontent} from '@/api/musicHall/index';
 export default {
     name: 'music-hall-index',
     data() {
@@ -33,6 +33,13 @@ export default {
                     class: 'new-music',
                     data: []
                 },
+                // {
+                //     title: '独家放送',
+                //     bgcolor: 'gray',
+                //     tab: [],
+                //     class: 'privatecontent',
+                //     data: []
+                // },
                 {
                     title: '排行榜',
                     bgcolor: 'gray',
@@ -57,6 +64,7 @@ export default {
         this.$nextTick(() => {
             this._getPersonalized();
             this._getNewMusic();
+            // this._getPrivatecontent();
         });
     },
     methods: {
@@ -73,10 +81,21 @@ export default {
         },
         // 新歌速递
         _getNewMusic() {
-            getNewMusic({type: 96})
+            getNewMusic()
                 .then((res) => {
                     let result = res.data.data;
                     this.content[1].data = this.getDataArr(result, 9);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        // 独家放送
+        _getPrivatecontent() {
+            getPrivatecontent()
+                .then((res) => {
+                    let result = res.data.result;
+                    this.content[2].data =  result;
                 })
                 .catch(err => {
                     console.log(err);
