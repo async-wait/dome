@@ -8,29 +8,28 @@
             :data="item.data"
             :className="item.class"
         ></personalized>
-        <!-- <div v-for="(item, index) in cont" :key="index">{{item.data}}</div> -->
     </div>
 </template>
 
 <script>
 import Personalized from './personalized/personalized';
-import {getPersonalized} from '@/api/musicHall/index';
+import {getPersonalized, getNewMusic} from '@/api/musicHall/index';
 export default {
     name: 'music-hall-index',
     data() {
         return {
             content: [
                 {
-                    class: 'recommend',
                     title: '歌单推荐',
                     bgcolor: 'gray',
                     tab: [],
+                    class: 'recommend',
                     data: []
                 },
                 {
                     title: '新歌首发',
                     bgcolor: '',
-                    tab: ['内地', '港台', '欧美', '日本', '韩国'],
+                    tab: ['全部', '华语', '欧美', '日本', '韩国'],
                     class: 'new-music',
                     data: []
                 },
@@ -57,11 +56,13 @@ export default {
     mounted () {
         this.$nextTick(() => {
             this._getPersonalized();
+            this._getNewMusic();
         });
     },
     methods: {
+        // 歌单推荐
         _getPersonalized() {
-            getPersonalized({type: 96})
+            getPersonalized()
                 .then((res) => {
                     let result = res.data.result;
                     this.content[0].data = this.getDataArr(result, 5);
@@ -70,10 +71,26 @@ export default {
                     console.log(err);
                 });
         },
+        // 新歌速递
+        _getNewMusic() {
+            getNewMusic({type: 96})
+                .then((res) => {
+                    let result = res.data.data;
+                    this.content[1].data = this.getDataArr(result, 9);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        /**
+         * @param {Object} data要处理的数据
+         * @param {Number} num分页一张要显示多少数据
+         * @return {Array} arr返回数组
+         */
         getDataArr(data, num) {
             let arr = [];
             for (let i = 0; i < num; i++) {
-                arr[i] = data.splice(0, 5);
+                arr[i] = data.splice(0, num);
             }
             return arr;
         }
