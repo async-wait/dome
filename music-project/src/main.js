@@ -23,17 +23,12 @@ Vue.use(VueLazyload, {
     loading: require('./common/image/default.png')
 });
 
-
-
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
     el: '#app',
     router,
-    store,                        // 将store注册到根组件里面
-    // components: { App },
-    // template: '<App/>'
+    store,
     render: h => h(App)
 })

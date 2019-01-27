@@ -11,7 +11,7 @@ const instance = axios.create({
 const $axios = {
     get(url) {
         return function (params) {
-            return instance.get(url, params);
+            return instance.get(url, {params});
         }
     },
     post(url) {

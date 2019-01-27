@@ -13,7 +13,7 @@
 
 <script>
 import Personalized from './personalized/personalized';
-import {getPersonalized, getNewMusic, getPrivatecontent} from '@/api/musicHall/index';
+import {getPersonalized, getNewMusic, getRanking} from '@/api/musicHall/index';
 export default {
     name: 'music-hall-index',
     data() {
@@ -33,19 +33,18 @@ export default {
                     class: 'new-music',
                     data: []
                 },
-                // {
-                //     title: '独家放送',
-                //     bgcolor: 'gray',
-                //     tab: [],
-                //     class: 'privatecontent',
-                //     data: []
-                // },
                 {
                     title: '排行榜',
                     bgcolor: 'gray',
                     tab: [],
                     class: 'ranking',
-                    data: []
+                    data: {
+                        liux: [],
+                        hotMusic: [],
+                        newMusic: [],
+                        es: [],
+                        hguo: []
+                    }
                 },
                 {
                     title: 'MV',
@@ -64,7 +63,7 @@ export default {
         this.$nextTick(() => {
             this._getPersonalized();
             this._getNewMusic();
-            // this._getPrivatecontent();
+            this._getRanking();
         });
     },
     methods: {
@@ -90,16 +89,17 @@ export default {
                     console.log(err);
                 });
         },
-        // 独家放送
-        _getPrivatecontent() {
-            getPrivatecontent()
-                .then((res) => {
-                    let result = res.data.result;
-                    this.content[2].data =  result;
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+        _getRanking() {
+            let arr = [0, 1, 3, 6, 11];
+            arr.forEach((v, i) => {
+                getRanking({idx: v})
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            });
         },
         /**
          * @param {Object} data要处理的数据

@@ -12,7 +12,7 @@
                             v-for="(item, index) in cont" :key="index">
                             <div v-for="cont in item" :key="cont.id">
                                 <div class="img">
-                                    <img :src="cont.picUrl">
+                                    <img v-lazy="cont.picUrl">
                                     <div class="play-wp">
                                         <div class="iconfont icon-material"></div>
                                     </div>
@@ -32,11 +32,15 @@
                             <div v-for="cont in item" :key="cont.id">
                                 <div class="left">
                                     <div class="img">
-                                        <img :src="cont.album.blurPicUrl" alt="">
+                                        <img v-lazy="cont.album.blurPicUrl" alt="">
                                     </div>
                                     <div class="music-info">
                                         <h2>{{cont.name}}</h2>
-                                        <p>{{cont.artists[0].name}}</p>
+                                        <p>
+                                            <span v-for="(v, i) in cont.artists" :key="i">
+                                                <small v-if="i<2">{{v.name}}</small><b v-if="cont.artists.length>1&&i===0">&nbsp;/&nbsp;</b>
+                                            </span>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="right">{{cont.duration | playTime}}</div>
@@ -45,36 +49,8 @@
                     </template>
                 </slider>
             </div>
-            <div class="content" v-if="className === 'privatecontent'">
-                <slider :data="data">
-                    <template slot-scope="{cont}" slot="music-hall">
-                        <div class="swiper-slide"
-                            v-for="(item, index) in cont" :key="index">
-                            <div class="img">
-                                <img :src="item.picUrl">
-                            </div>
-                        </div>
-                    </template>
-                </slider>
-            </div>
             <div class="content" v-if="className === 'ranking'">
-                <slider :data="data">
-                    <template slot-scope="{cont}" slot="music-hall">
-                        <div class="swiper-slide"
-                            v-for="(item, index) in cont" :key="index">
-                            <div v-for="cont in item" :key="cont.id">
-                                <div class="img">
-                                    <img :src="cont.picUrl">
-                                    <div class="play-wp">
-                                        <div class="iconfont icon-material"></div>
-                                    </div>
-                                </div>
-                                <div class="name">{{cont.name}}</div>
-                                <div class="play-num">播放量：{{playCount(cont.playCount)}}万</div>
-                            </div>
-                        </div>
-                    </template>
-                </slider>
+                
             </div>
             <div class="content" v-if="className === 'mv'">
                 <slider :data="data">
@@ -258,13 +234,17 @@ export default {
         }
     }
     .new-music {
+        padding-bottom: 30px;
+        .content {
+            padding-top: 35px;
+        }
         .swiper-slide {
-            display: flex;
-            justify-content: flex-start;
-            flex-wrap: wrap;
+            height: 400px;
             &>div {
                 width: 370px;
+                height: 86px;
                 margin-bottom: 25px;
+                float: left;
                 display: flex;
                 text-align: left;
                 justify-content: space-between;
