@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import './city/city.dart';
 import 'carTest.dart';
 import 'birthday.dart';
-import './date_picker_bottom_sheet.dart';
+// import './date_picker_bottom_sheet.dart';
 import './datePicker/widget/date_picker_widget.dart';
 
 void main() => runApp(MyApp());
@@ -71,11 +72,9 @@ class _MyHomePageState extends State<MyHomePage> {
             RaisedButton(
               child: Text("生日选择"),
               onPressed: () {
-                Navigator.push( context,
-                  MaterialPageRoute(builder: (context) {
-                      return Birthday();
-                  })
-                );
+                SelectBirthday.show(context).then((value) {
+                  print(value);
+                });
               },
             ),
             RaisedButton(

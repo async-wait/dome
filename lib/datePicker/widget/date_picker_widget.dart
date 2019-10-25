@@ -7,7 +7,6 @@ import '../date_time_formatter.dart';
 import '../date_picker_theme.dart';
 import '../date_picker_constants.dart';
 import '../i18n/date_picker_i18n.dart';
-// import 'date_picker_title_widget.dart';
 
 /// Solar months of 31 days.
 const List<int> _solarMonthsOf31Days = const <int>[1, 3, 5, 7, 8, 10, 12];
@@ -174,11 +173,16 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
 
   /// pressed confirm widget
   void _onPressedConfirm() {
-    if (widget.onConfirm != null) {
-      DateTime dateTime = DateTime(_currYear, _currMonth, _currDay);
-      widget.onConfirm(dateTime, _calcSelectIndexList());
-    }
-    Navigator.pop(context);
+    DateTime dateTime = DateTime(_currYear, _currMonth, _currDay);
+    // print(dateTime);
+    // if (widget.onConfirm != null) {
+    //   widget.onConfirm(dateTime, _calcSelectIndexList());
+    // }
+    String year = dateTime.year.toString(),
+           month = dateTime.month.toString(),
+           day = dateTime.day.toString(),
+           _date = year + '-' + month + '-' + day;
+    Navigator.pop(context, dateTime);
   }
 
   /// notify selected date changed
@@ -248,9 +252,8 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
     return Expanded(
       flex: 1,
       child: Container(
-        padding: EdgeInsets.only(left: 8.0, right: 8, top: 35, bottom: 35),
+        padding: EdgeInsets.only(top: 30, bottom: 30),
         height: widget.pickerTheme.pickerHeight,
-        // decoration: BoxDecoration(color: widget.pickerTheme.backgroundColor),
         child: CupertinoPicker.builder(
           backgroundColor: widget.pickerTheme.backgroundColor,
           scrollController: scrollCtrl,
@@ -258,6 +261,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
           onSelectedItemChanged: valueChanged,
           childCount: valueRange.last - valueRange.first + 1,
           magnification: 1.2,
+          squeeze: 0.9,
           itemBuilder: (context, index) =>
               _renderDatePickerItemComponent(valueRange.first + index, format),
         ),
@@ -270,7 +274,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
       alignment: Alignment.center,
       child: Text(
         DateTimeFormatter.formatDateTime(value, format, widget.locale),
-        style: TextStyle(color: Color(0xff2F3643), fontSize: 20, fontFamily: 'FZLTCHJW--GB1-0')
+        style: TextStyle(color: Color(0xff2F3643), fontSize: 26, fontFamily: 'FZLTCHJW--GB1-0')
       ),
     );
   }

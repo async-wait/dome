@@ -144,13 +144,13 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
 
     // display the title widget
     if (widget.pickerTheme.title != null || widget.pickerTheme.showTitle) {
-      Widget titleWidget = DatePickerTitleWidget(
-        pickerTheme: widget.pickerTheme,
-        locale: widget.locale,
-        onCancel: () => _onPressedCancel(),
-        onConfirm: () => _onPressedConfirm(),
-      );
-      return Column(children: <Widget>[titleWidget, pickerWidget]);
+      // Widget titleWidget = DatePickerTitleWidget(
+      //   pickerTheme: widget.pickerTheme,
+      //   locale: widget.locale,
+      //   onCancel: () => _onPressedCancel(),
+      //   onConfirm: () => _onPressedConfirm(),
+      // );
+      return Column(children: <Widget>[pickerWidget]);
     }
     return pickerWidget;
   }
